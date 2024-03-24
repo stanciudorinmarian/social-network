@@ -1,0 +1,20 @@
+services:
+  fpm:
+    build:
+      dockerfile: ./infrastructure/services/fpm/Dockerfile
+      context: .
+#    env_file:
+#      - .env
+    volumes:
+      - ./:/var/www/html
+
+  web:
+    build:
+      dockerfile: ./infrastructure/services/nginx/Dockerfile
+      context: .
+    depends_on:
+      - fpm
+    ports:
+      - ${INFRA_WEB_PORT:-80}:80
+    volumes:
+      - ./public:/var/www/html/public
